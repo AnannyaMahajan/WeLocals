@@ -1,0 +1,26 @@
+version: "3.9"
+services:
+  backend:
+    build: ./backend
+    container_name: welocals-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - SECRET_KEY=changeme-super-secret
+      - DB_URL=sqlite:///./welocals.db
+      - CORS_ORIGINS=http://localhost:5173
+    volumes:
+      - ./backend/app:/app
+      - backend_data:/data
+  frontend:
+    build: ./frontend
+    container_name: welocals-frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_BASE=http://localhost:8000
+    volumes:
+      - ./frontend:/usr/src/app
+    command: ["npm","run","dev","--","--host"]
+volumes:
+  backend_data:
